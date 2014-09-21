@@ -56,7 +56,7 @@ pub fn string2tokens (string: &str) -> Vec<PinyinToken> {
             _ => return tokens
         }
 
-        let MAX_FINAL_SIZE = 4u;
+        static MAX_FINAL_SIZE: uint = 4;
         
         for character in iterator {
             if is_tone(&character) && is_valid_final(accumulator.as_slice()) {
