@@ -4,6 +4,10 @@ name = "librustpiyin"
 version = "0.0.1"
 authors = [ "Allan Simon <allan.simon@supinfo.com>" ]
 
+[lib]
+name = "pinyinengine"
+path = "src/lib.rs"
+
 [[bin]]
 
 name = "read"
