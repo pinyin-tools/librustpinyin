@@ -5,11 +5,14 @@ use std::io::File;
 use self::serialize::json;
 use std::collections::HashMap;
 
+use std::hash::sip::SipHasher;
 
+pub type PinyinDB = HashMap<String, Vec<String>, SipHasher>;
 
-pub fn create_db(fname: &str) -> HashMap<String, Vec<String>> {
+pub fn create_db(fname: &str) -> PinyinDB {
 
-    let mut db : HashMap<String, Vec<String>> = HashMap::new();
+    let hasher = SipHasher::new();
+    let mut db = HashMap::with_hasher(hasher);
 
     let path = Path::new(fname);
     let mut file = BufferedReader::new(File::open(&path));

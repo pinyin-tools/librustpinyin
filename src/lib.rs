@@ -1,27 +1,17 @@
+#![feature(default_type_params)]
 #![crate_name = "pinyinengine"]
 #![crate_type = "dylib"]
 
+
 pub use pinyin::db::create_db;
+pub use pinyin::db::PinyinDB;
 use pinyin::parser::string2tokens;
 
-use std::collections::HashMap;
-
+pub mod c_binding;
 mod pinyin;
 
-
-
-///
-///
-///
-//#[no_mangle]
-//pub extern fn pinyin2suggestion_c (
-//    pinyin_raw_string : &str
-//) -> Vec<&[u8]> {
-//
-//}
-
 pub extern fn pinyin2suggestion(
-    db: &HashMap<String, Vec<String>>,
+    db: &PinyinDB,
     pinyin_raw_string : &str
 ) -> Vec<String> {
     let mut suggestions : Vec<String> = vec![];
