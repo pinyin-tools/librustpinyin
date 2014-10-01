@@ -1,6 +1,10 @@
 extern crate native;
 extern crate rustrt;
 
+/// Note: this file is a pure hack that will not be needed
+/// when the std::io::File  will be able to work without
+/// runtime
+
 use self::native::io::file::open;
 use self::rustrt::rtio;
 use std::io::IoResult;

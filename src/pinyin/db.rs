@@ -11,6 +11,9 @@ use pinyin::myfile::open_read_only;
 
 pub type PinyinDB = HashMap<String, Vec<String>, SipHasher>;
 
+/// create the database from a csv file, use this one if you dont
+/// want to depend on the runtime being present
+///
 pub fn create_db_from_csv(fname: &str) -> PinyinDB {
     let hasher = SipHasher::new();
     let mut db = HashMap::with_hasher(hasher);
@@ -34,7 +37,6 @@ pub fn create_db_from_csv(fname: &str) -> PinyinDB {
             |_key, value| value.push(sinogram.to_string())
         );
     }
-    println!("db ready");
 
     return db;
 }
