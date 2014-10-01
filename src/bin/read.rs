@@ -3,10 +3,10 @@ extern crate pinyinengine;
 use std::io;
 
 use pinyinengine::pinyin2suggestion;
-use pinyinengine::create_db;
+use pinyinengine::create_db_from_csv;
 fn main() {
 
-    let db = create_db("../data/filtered_db.json");
+    let db = create_db_from_csv("../data/filtered_db.csv");
 
     for line in io::stdin().lines() {
         let string = line.unwrap();

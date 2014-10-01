@@ -1,6 +1,7 @@
+extern crate native;
 extern crate libc;
 
-use pinyin::db::create_db;
+use pinyin::db::create_db_from_csv;
 use pinyin::db::PinyinDB;
 
 use std::c_str::CString;
@@ -11,7 +12,7 @@ use pinyin2suggestion;
 pub extern fn db_new(fname: *const libc::c_char) -> Box<PinyinDB> {
     let string = unsafe { from_buf(fname as *const u8) };
 
-    box create_db(string.as_slice())
+    box create_db_from_csv(string.as_slice())
 }
 
 #[no_mangle]
