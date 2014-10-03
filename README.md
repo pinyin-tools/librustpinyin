@@ -28,6 +28,13 @@ To build it, you simply need to have a recent rust compiler and cargo
 
 and you're done
 
+## Install it
+
+    sudo cp target/libpinyinengine*.so /usr/local/lib/libpinyinengine.so
+    sudo ldconfig
+    sudo cp include/pinyinengine.h /usr/local/include/
+
+of course later when `cargo` will support it, we will do that simply with a `cargo install`
 
 ## testing it
 
@@ -52,16 +59,6 @@ for example: `echo -n  "f3g2r2" | ./read` will print
     仿
     // more character with pinyin f.. something and third tone
     佱
-    俯
-    俯
-    仿
-    郙
-    釜
-    釡
-    鍅
-    俯
-    髣
-    鬴
     魬
     鯆
     黼
