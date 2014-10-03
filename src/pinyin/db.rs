@@ -8,8 +8,9 @@ use std::collections::TreeMap;
 use std::hash::sip::SipHasher;
 use pinyin::myfile::open_read_only;
 
+use pinyin::dbentry::DBEntry;
 
-pub type PinyinDB = HashMap<String, Vec<String>, SipHasher>;
+pub type PinyinDB = HashMap<String, Vec<DBEntry>, SipHasher>;
 
 /// create the database from a csv file, use this one if you dont
 /// want to depend on the runtime being present
@@ -30,11 +31,20 @@ pub fn create_db_from_csv(fname: &str) -> PinyinDB {
         let mut iter = line.as_slice().split(',');
         let sinogram =  iter.next().unwrap();
         let pinyin = iter.next().unwrap();
+        let frequency = iter.next().unwrap();
 
         db.insert_or_update_with(
             pinyin.to_string(),
-            vec![sinogram.to_string()],
-            |_key, value| value.push(sinogram.to_string())
+            vec![DBEntry{
+                    sinogram: sinogram.to_string(),
+                    frequency: from_str(frequency).unwrap_or(0u)
+                }
+            ],
+            |_key, value| value.push(DBEntry{
+                    sinogram: sinogram.to_string(),
+                    frequency: from_str(frequency).unwrap_or(0u)
+                }
+            )
         );
     }
 
@@ -71,19 +81,32 @@ pub fn create_db(fname: &str) -> PinyinDB {
             }
             db.insert_or_update_with(
                 full_pinyin,
-                vec![sinogram.clone()],
-                |_key, value| value.push(sinogram.clone())
+                vec![DBEntry{
+                        sinogram: sinogram.clone(),
+                        frequency: 0
+                    }
+                ],
+                |_key, value| value.push(DBEntry{
+                        sinogram: sinogram.clone(),
+                        frequency: 0
+                    }
+                )
             );
 
             db.insert_or_update_with(
                 min_pinyin,
-                vec![sinogram.clone()],
-                |_key, value| value.push(sinogram.clone())
+                vec![DBEntry{
+                        sinogram: sinogram.clone(),
+                        frequency: 0
+                    }
+                ],
+                |_key, value| value.push(DBEntry{
+                        sinogram: sinogram.clone(),
+                        frequency: 0
+                    }
+                )
             );
-
         }
     }
     return db;
-
-
 }
