@@ -7,6 +7,7 @@ use pinyin::db::PinyinDB;
 use std::c_str::CString;
 use std::string::raw::from_buf;
 use pinyin2suggestion;
+use pinyin::parser::string_to_tokens_as_strings;
 
 #[no_mangle]
 pub extern fn db_new(fname: *const libc::c_char) -> Box<PinyinDB> {
@@ -39,11 +40,26 @@ pub extern fn pinyin2suggestions_c (
     )
 }
 
+/// C compatible version of string_to_tokens_as_strings
+///
+///
+#[no_mangle]
+pub extern fn string_to_tokens_as_strings_c(
+    pinyin_raw_string: *const libc::c_char
+) -> Box<Vec<String>> {
+
+    let pinyin = unsafe {
+        from_buf(pinyin_raw_string as *const u8)
+    };
+
+    box string_to_tokens_as_strings(pinyin.as_slice())
+}
+
 ///
 ///
 ///
 #[no_mangle]
-pub extern fn suggestions_free (
+pub extern fn vec_string_free (
     suggestions: Box<Vec<String>>
 ) {
     let _ = suggestions;
@@ -53,7 +69,7 @@ pub extern fn suggestions_free (
 ///
 ///
 #[no_mangle]
-pub extern fn suggestions_size(suggestions: &mut Vec<String>) -> u32  {
+pub extern fn vec_string_size (suggestions: &mut Vec<String>) -> u32  {
     return suggestions.len() as u32;
 }
 
@@ -61,7 +77,7 @@ pub extern fn suggestions_size(suggestions: &mut Vec<String>) -> u32  {
 ///
 ///
 #[no_mangle]
-pub extern fn suggestions_value_get(
+pub extern fn vec_string_value_get(
     suggestions: &mut Vec<String>,
     index: u32
 ) -> *const libc::c_char {
@@ -75,7 +91,7 @@ pub extern fn suggestions_value_get(
 ///
 ///
 #[no_mangle]
-pub extern fn suggestions_value_free (buffer: *const i8) {
+pub extern fn vec_string_value_free(buffer: *const i8) {
     unsafe { CString::new(buffer, true); }
 }
 

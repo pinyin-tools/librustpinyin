@@ -6,6 +6,9 @@ use pinyin::check::is_possible_two_letter_initial;
 use pinyin::check::is_one_letter_initial;
 use pinyin::check::is_tone;
 
+///
+///
+///
 pub fn string2tokens (string: &str) -> Vec<PinyinToken> {
 
     let mut tokens : Vec<PinyinToken> = vec![];
@@ -76,3 +79,26 @@ pub fn string2tokens (string: &str) -> Vec<PinyinToken> {
     }
 }
 
+/// Take a string parse it as much as it can into pinyin
+/// and return a vector of the different consecutive pinyin token string
+/// we've been able to parse
+///
+/// for example "n3hao3blablanzhong1bla" will return ["n3", "hao3"]
+///
+pub fn string_to_tokens_as_strings(string: &str) -> Vec<String> {
+    let mut string_tokens : Vec<String> = vec![];
+
+    for token in string2tokens(string.as_slice()).iter() {
+
+        let pinyin = vec![
+            token.initial.clone(),
+            token.final.clone(),
+            token.tone.to_string()
+        ].concat();
+
+
+        string_tokens.push(pinyin);
+    }
+
+    string_tokens
+}
