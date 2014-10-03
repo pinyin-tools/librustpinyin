@@ -1,18 +1,16 @@
 # librustpinyin
 
-Implementation in rust of library meant to be used in IME (input method engine)
-and related software
+Rust library with C ABI compatible interface that implement an engine to type
+pinyin (Chinese). the library compiles a standard .so
 
-the library will be a standard .so/dll that can be embedded in other language
-as you would do for any normal C library
 
-the main goal compared to other IME library/software is to provide a way to 
+The main goal compared to other IME library/software is to provide a way to 
 type pinyin with the tone explicitly stated, in order to force learner to
 know the tones in addition to the pinyin itself
 
 Once the library will working and tested, the next goal will be to create:
 
-  * IBUS engine for Linux
+  * IBUS engine for Linux (already started here [pinyin-tools/ibus-tmpl](https://github.com/pinyin-tools/ibus-tmpl)
   * IME engine for android 
 
 of course iphone/Mac OS/Windows implementation would be welcome if somebody
@@ -26,7 +24,7 @@ or to add new issues in the tracker
 
 To build it, you simply need to have a recent rust compiler and cargo
 
-   cargo build 
+    cargo build 
 
 and you're done
 
