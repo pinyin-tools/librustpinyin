@@ -21,23 +21,23 @@ pub fn string2tokens (string: &str) -> Vec<PinyinToken> {
         match iterator.next() {
             Some(character)
             if is_possible_no_initial(&character) => {
-                accumulator.push_char(character);
+                accumulator.push(character);
             }
 
             Some(character)
             if is_one_letter_initial(&character) => {
-                initial.push_char(character);
+                initial.push(character);
             }
 
             Some(character)
             if is_possible_two_letter_initial(&character) => {
 
-                initial.push_char(character);
+                initial.push(character);
                 match iterator.next() {
 
                     Some(character)
                     if is_second_initial_letter(character) => {
-                        initial.push_char(character);
+                        initial.push(character);
 
                     }
 
@@ -50,7 +50,7 @@ pub fn string2tokens (string: &str) -> Vec<PinyinToken> {
                         });
                         continue;
                     }
-                    Some(character) => accumulator.push_char(character),
+                    Some(character) => accumulator.push(character),
                     _ => return tokens
                 }
             }
@@ -73,7 +73,7 @@ pub fn string2tokens (string: &str) -> Vec<PinyinToken> {
             if accumulator.len() >= MAX_FINAL_SIZE {
                 return tokens;
             }
-            accumulator.push_char(character);
+            accumulator.push(character);
         }
 
     }
