@@ -29,14 +29,16 @@ pub extern fn pinyin2suggestion(
         complete_pinyin.push_str(full_pinyin.as_slice());
 
         if db.contains_key(&complete_pinyin) {
-            suggestions = vec![];
             for sinogram in db[complete_pinyin].iter() {
                 suggestions.push(sinogram.clone());
             }
-        } else {
-            break;
         }
     }
+    // for the moment we reverse the vector in order to have
+    // the longest suggestions first, we could have used "unshift"
+    // to prepend, but unshift would have required to recopy the vector
+    // everytime, which would have been highly unefficient (see rust doc)
+    suggestions.reverse();
     return suggestions;
 
 }
