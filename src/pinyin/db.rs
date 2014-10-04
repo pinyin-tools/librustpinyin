@@ -3,15 +3,14 @@ extern crate serialize;
 use std::io::BufferedReader;
 use self::serialize::json;
 use std::collections::{HashMap, hashmap};
-use std::collections::hashmap::{Occupied, Vacant};
 use std::collections::TreeMap;
 
 use std::hash::sip::SipHasher;
 use pinyin::myfile::open_read_only;
 
-use pinyin::dbentry::DBEntry;
+use pinyin::dbentry::DbEntry;
 
-pub type PinyinDB = HashMap<String, Vec<DBEntry>, SipHasher>;
+pub type PinyinDB = HashMap<String, Vec<DbEntry>, SipHasher>;
 
 /// create the database from a csv file, use this one if you dont
 /// want to depend on the runtime being present
@@ -30,16 +29,16 @@ pub fn create_db_from_csv(fname: &str) -> PinyinDB {
         };
 
         let mut iter = line.as_slice().split(',');
-        let sinogram =  iter.next().unwrap();
-        let pinyin = iter.next().unwrap();
+        let sinogram =  iter.next().unwrap().to_string();
+        let pinyin = iter.next().unwrap().to_string();
         let frequency = from_str(iter.next().unwrap()).unwrap_or(0u);
 
-        let entry = DBEntry::new(
-            sinogram.to_string(),
+        let entry = DbEntry::new(
+            sinogram,
             frequency
         );
 
-        match db.entry(pinyin.to_string()) {
+        match db.entry(pinyin) {
             hashmap::Occupied(o) => o.into_mut().push(entry),
             hashmap::Vacant(v) => { v.set(vec![entry]); }
         }
@@ -77,12 +76,12 @@ pub fn create_db(fname: &str) -> PinyinDB {
                 min_pinyin.push_str(pinyin[2].as_slice());
             }
 
-            let full_entry = DBEntry::new(
+            let full_entry = DbEntry::new(
                 sinogram.to_string(),
                 0
             );
 
-            let min_entry = DBEntry::new(
+            let min_entry = DbEntry::new(
                 sinogram.to_string(),
                 0
             );

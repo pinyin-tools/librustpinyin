@@ -1,11 +1,11 @@
-pub struct DBEntry {
+pub struct DbEntry {
     pub sinogram: String,
     pub frequency: uint
 }
 
-impl DBEntry {
-    pub fn new(sinogram:String, frequency:uint) -> DBEntry {
-        DBEntry {
+impl DbEntry {
+    pub fn new(sinogram:String, frequency:uint) -> DbEntry {
+        DbEntry {
             sinogram: sinogram,
             frequency: frequency
         }
