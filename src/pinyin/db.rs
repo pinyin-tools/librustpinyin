@@ -2,21 +2,22 @@ extern crate serialize;
 
 use std::io::BufferedReader;
 use self::serialize::json;
-use std::collections::HashMap;
+use std::collections::{HashMap, hashmap};
 use std::collections::TreeMap;
 
 use std::hash::sip::SipHasher;
 use pinyin::myfile::open_read_only;
 
+use pinyin::dbentry::DbEntry;
 
-pub type PinyinDB = HashMap<String, Vec<String>, SipHasher>;
+pub type PinyinDB = HashMap<String, Vec<DbEntry>, SipHasher>;
 
 /// create the database from a csv file, use this one if you dont
 /// want to depend on the runtime being present
 ///
 pub fn create_db_from_csv(fname: &str) -> PinyinDB {
     let hasher = SipHasher::new();
-    let mut db = HashMap::with_hasher(hasher);
+    let mut db: PinyinDB = HashMap::with_hasher(hasher);
 
     let path = Path::new(fname);
     let mut file = BufferedReader::new(open_read_only(&path));
@@ -28,14 +29,19 @@ pub fn create_db_from_csv(fname: &str) -> PinyinDB {
         };
 
         let mut iter = line.as_slice().split(',');
-        let sinogram =  iter.next().unwrap();
-        let pinyin = iter.next().unwrap();
+        let sinogram =  iter.next().unwrap().to_string();
+        let pinyin = iter.next().unwrap().to_string();
+        let frequency = from_str(iter.next().unwrap()).unwrap_or(0u);
 
-        db.insert_or_update_with(
-            pinyin.to_string(),
-            vec![sinogram.to_string()],
-            |_key, value| value.push(sinogram.to_string())
+        let entry = DbEntry::new(
+            sinogram,
+            frequency
         );
+
+        match db.entry(pinyin) {
+            hashmap::Occupied(o) => o.into_mut().push(entry),
+            hashmap::Vacant(v) => { v.set(vec![entry]); }
+        }
     }
 
     return db;
@@ -44,7 +50,7 @@ pub fn create_db_from_csv(fname: &str) -> PinyinDB {
 pub fn create_db(fname: &str) -> PinyinDB {
 
     let hasher = SipHasher::new();
-    let mut db = HashMap::with_hasher(hasher);
+    let mut db: PinyinDB = HashMap::with_hasher(hasher);
 
     let path = Path::new(fname);
     let mut file = BufferedReader::new(open_read_only(&path));
@@ -69,21 +75,27 @@ pub fn create_db(fname: &str) -> PinyinDB {
                 min_pinyin.push_str(pinyin[0].as_slice());
                 min_pinyin.push_str(pinyin[2].as_slice());
             }
-            db.insert_or_update_with(
-                full_pinyin,
-                vec![sinogram.clone()],
-                |_key, value| value.push(sinogram.clone())
+
+            let full_entry = DbEntry::new(
+                sinogram.to_string(),
+                0
             );
 
-            db.insert_or_update_with(
-                min_pinyin,
-                vec![sinogram.clone()],
-                |_key, value| value.push(sinogram.clone())
+            let min_entry = DbEntry::new(
+                sinogram.to_string(),
+                0
             );
 
+            match db.entry(full_pinyin.to_string()) {
+                hashmap::Occupied(o) => o.into_mut().push(full_entry),
+                hashmap::Vacant(v) => { v.set(vec![full_entry]); }
+            }
+
+            match db.entry(min_pinyin.to_string()) {
+                hashmap::Occupied(o) => o.into_mut().push(min_entry),
+                hashmap::Vacant(v) => { v.set(vec![min_entry]); }
+            }
         }
     }
     return db;
-
-
 }
