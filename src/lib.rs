@@ -29,6 +29,10 @@ pub extern fn pinyin2suggestion(
 
         complete_pinyin.push_str(full_pinyin.as_slice());
 
+        if !db.contains_key(&complete_pinyin) {
+            continue
+        }
+
         let mut entries = Vec::with_capacity(tokens.len());
         for entity in db[complete_pinyin].iter() {
             entries.push(entity);
