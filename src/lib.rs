@@ -16,9 +16,10 @@ pub extern fn pinyin2suggestion(
     pinyin_raw_string : &str
 ) -> Vec<String> {
     let mut suggestions : Vec<String> = vec![];
-
     let mut complete_pinyin = String::new();
-    for token in string2tokens(pinyin_raw_string.as_slice()).iter() {
+    let tokens = string2tokens(pinyin_raw_string.as_slice());
+    
+    for token in tokens.iter() {
 
         let full_pinyin = vec![
             token.initial.clone(),
@@ -28,10 +29,14 @@ pub extern fn pinyin2suggestion(
 
         complete_pinyin.push_str(full_pinyin.as_slice());
 
-        if db.contains_key(&complete_pinyin) {
-            for entity in db[complete_pinyin].iter() {
-                suggestions.push(entity.sinogram.clone());
-            }
+        let mut entries = Vec::with_capacity(tokens.len());
+        for entity in db[complete_pinyin].iter() {
+            entries.push(entity);
+        }
+
+        entries.sort();
+        for entity in entries.iter() {
+            suggestions.push(entity.sinogram.clone());
         }
     }
 

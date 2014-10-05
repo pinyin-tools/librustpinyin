@@ -1,13 +1,20 @@
+#[deriving(Eq, PartialEq, PartialOrd)]
 pub struct DbEntry {
-    pub sinogram: String,
-    pub frequency: uint
+    pub frequency: uint,
+    pub sinogram: String
 }
 
 impl DbEntry {
     pub fn new(sinogram:String, frequency:uint) -> DbEntry {
         DbEntry {
-            sinogram: sinogram,
-            frequency: frequency
+            frequency: frequency,
+            sinogram: sinogram
         }
+    }
+}
+
+impl Ord for DbEntry {
+    fn cmp(&self,other: &DbEntry) -> Ordering {
+        return self.frequency.cmp(&other.frequency);
     }
 }
