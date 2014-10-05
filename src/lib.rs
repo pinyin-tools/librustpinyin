@@ -5,6 +5,7 @@
 
 pub use pinyin::db::create_db;
 pub use pinyin::db::create_db_from_csv;
+pub use pinyin::db::dump_db_to_file;
 pub use pinyin::db::PinyinDB;
 use pinyin::parser::string2tokens;
 

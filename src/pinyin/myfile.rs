@@ -17,6 +17,15 @@ pub struct MyFile {
     last_nread: int,
 }
 
+impl Writer for MyFile {
+    fn write(&mut self, buf: &[u8]) -> IoResult<()> {
+        match self.fd.write(buf) {
+            Ok(_) => Ok(()),
+            Err(_) =>  Err(standard_error(io::EndOfFile))
+        }
+    }
+}
+
 impl Reader for MyFile {
     fn read(&mut self, buf: &mut [u8]) -> IoResult<uint> {
         let result = self.fd.read(buf);
@@ -41,6 +50,27 @@ pub fn open_read_only(path: &Path) -> MyFile {
         &path.to_c_str(),
         rtio::Open,
         rtio::Read
+    );
+
+    match result {
+        Ok(filedesc) => {
+            MyFile{
+                fd: box filedesc,
+                last_nread: -1
+            }
+        },
+        Err(e) => {
+            fail!(e);
+        }
+    }
+}
+
+pub fn open_write_only(path: &Path) -> MyFile {
+
+    let result = open(
+        &path.to_c_str(),
+        rtio::Open,
+        rtio::Write
     );
 
     match result {

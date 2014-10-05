@@ -2,6 +2,7 @@ extern crate native;
 extern crate libc;
 
 use pinyin::db::create_db_from_csv;
+use pinyin::db::dump_db_to_file;
 use pinyin::db::PinyinDB;
 
 use std::c_str::CString;
@@ -19,6 +20,14 @@ pub extern fn db_new(fname: *const libc::c_char) -> Box<PinyinDB> {
 #[no_mangle]
 pub extern fn db_free(db: Box<PinyinDB>) {
     let _ = db;
+}
+
+///
+///
+#[no_mangle]
+pub extern fn db_dump(db: &PinyinDB, fname: *const libc::c_char) {
+    let string = unsafe { from_buf(fname as *const u8) };
+    dump_db_to_file(db, string.as_slice());
 }
 
 ///

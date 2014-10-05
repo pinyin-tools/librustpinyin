@@ -1,12 +1,14 @@
 extern crate serialize;
 
 use std::io::BufferedReader;
+use std::io::BufferedWriter;
 use self::serialize::json;
 use std::collections::{HashMap, hashmap};
 use std::collections::TreeMap;
 
 use std::hash::sip::SipHasher;
 use pinyin::myfile::open_read_only;
+use pinyin::myfile::open_write_only;
 
 use pinyin::dbentry::DbEntry;
 
@@ -98,4 +100,25 @@ pub fn create_db(fname: &str) -> PinyinDB {
         }
     }
     return db;
+}
+
+/// Dump the given in the file at the given address
+/// dumped using the same CSV format as create_db_from_csv
+///
+pub fn dump_db_to_file(db: &PinyinDB, fname: &str) {
+
+    let path = Path::new(fname);
+    let mut file = BufferedWriter::new(open_write_only(&path));
+
+    for (pinyin, entries) in db.iter() {
+        for entry in entries.iter() {
+            file.write_str(pinyin.as_slice());
+            file.write_char(',');
+            file.write_str(entry.sinogram.as_slice());
+            file.write_char(',');
+            file.write_uint(entry.frequency);
+            file.write_char(',');
+            file.write_char('\n');
+        }
+    }
 }

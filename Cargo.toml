@@ -12,3 +12,7 @@ crate-type = ["dylib"]
 [[bin]]
 
 name = "read"
+
+[[bin]]
+
+name = "bench_read_dump_db"
