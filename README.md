@@ -1,4 +1,4 @@
-# librustpinyin
+# librustpinyin [![Build Status](https://api.travis-ci.org/pinyin-tools/librustpinyin.svg?branch=master)](https://travis-ci.org/pinyin-tools/librustpinyin)
 
 Rust library with C ABI compatible interface that implement an engine to type
 pinyin (Chinese). the library compiles a standard .so
