@@ -10,6 +10,12 @@ void db_free(void* db);
 // dump the given database into a csv format (same accepted by db_new)
 void db_dump(void* db, const char* fname);
 
+void db_update_with_word(
+    void* db,
+    const char* pinyin,
+    const char* sinograms
+);
+
 // create a vector of suggestions based on a search string
 void* pinyin2suggestions_c(
     void* db,

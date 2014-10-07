@@ -3,7 +3,10 @@ extern crate libc;
 
 use pinyin::db::create_db_from_csv;
 use pinyin::db::dump_db_to_file;
+use pinyin::db::update_db_with_word;
 use pinyin::db::PinyinDB;
+
+use pinyin::dbentry::DbEntry;
 
 use std::c_str::CString;
 use std::string::raw::from_buf;
@@ -28,6 +31,26 @@ pub extern fn db_free(db: Box<PinyinDB>) {
 pub extern fn db_dump(db: &PinyinDB, fname: *const libc::c_char) {
     let string = unsafe { from_buf(fname as *const u8) };
     dump_db_to_file(db, string.as_slice());
+}
+
+///
+///
+///
+#[no_mangle]
+pub extern fn db_update_with_word(
+    db: &mut PinyinDB,
+    pinyin_raw: *const libc::c_char,
+    sinograms_raw: *const libc::c_char
+) {
+
+    let pinyin = unsafe {from_buf(pinyin_raw as *const u8)};
+    let sinograms = unsafe {from_buf(sinograms_raw as *const u8)};
+
+    update_db_with_word(
+        db,
+        pinyin.as_slice(),
+        &DbEntry::new(sinograms, 1)
+    );
 }
 
 ///

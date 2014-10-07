@@ -1,4 +1,4 @@
-#[deriving(Eq, PartialEq, PartialOrd)]
+#[deriving(Clone, Eq, PartialEq, PartialOrd)]
 pub struct DbEntry {
     pub frequency: uint,
     pub sinogram: String
