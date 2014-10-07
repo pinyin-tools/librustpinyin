@@ -102,6 +102,27 @@ pub fn create_db(fname: &str) -> PinyinDB {
     return db;
 }
 
+
+/// update the main db to add words or update the frequency of
+/// existing ones, based on a user provided database
+///
+pub fn update_db_with_user_db(
+    main_db: &mut PinyinDB,
+    user_db: &PinyinDB
+) {
+    // we go over each word we have in our user database
+    for (pinyin, entries) in user_db.iter() {
+        for entry in entries.iter() {
+            // and we update the mainDb with it
+            update_db_with_word(
+                main_db,
+                pinyin.as_slice(),
+                entry
+            );
+        }
+    }
+}
+
 /// Update database for the word link with a pinyin string
 /// either add it, or update the frequency
 ///

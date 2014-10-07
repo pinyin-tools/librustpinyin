@@ -4,6 +4,7 @@ extern crate libc;
 use pinyin::db::create_db_from_csv;
 use pinyin::db::dump_db_to_file;
 use pinyin::db::update_db_with_word;
+use pinyin::db::update_db_with_user_db;
 use pinyin::db::PinyinDB;
 
 use pinyin::dbentry::DbEntry;
@@ -31,6 +32,16 @@ pub extern fn db_free(db: Box<PinyinDB>) {
 pub extern fn db_dump(db: &PinyinDB, fname: *const libc::c_char) {
     let string = unsafe { from_buf(fname as *const u8) };
     dump_db_to_file(db, string.as_slice());
+}
+
+///
+///
+#[no_mangle]
+pub extern fn db_update_with_user_db(
+    db: &mut PinyinDB,
+    user_db: &PinyinDB
+) {
+    update_db_with_user_db(db, user_db);
 }
 
 ///

@@ -10,6 +10,11 @@ void db_free(void* db);
 // dump the given database into a csv format (same accepted by db_new)
 void db_dump(void* db, const char* fname);
 
+void db_update_with_user_db(
+    void* db,
+    void* userDb
+);
+
 void db_update_with_word(
     void* db,
     const char* pinyin,
