@@ -3,7 +3,7 @@
 #![crate_type = "dylib"]
 
 
-pub use pinyin::db::create_db;
+pub use pinyin::db::create_db_from_json;
 pub use pinyin::db::create_db_from_csv;
 pub use pinyin::db::dump_db_to_file;
 pub use pinyin::db::update_db_with_user_db;

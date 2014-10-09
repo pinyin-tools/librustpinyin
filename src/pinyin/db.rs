@@ -12,6 +12,8 @@ use pinyin::myfile::open_write_only;
 
 use pinyin::dbentry::DbEntry;
 
+/// Contains the database imported from external file. The key
+/// is a given pinyin String, the value is a list of entries.
 pub type PinyinDB = HashMap<String, Vec<DbEntry>, SipHasher>;
 
 /// create the database from a csv file, use this one if you dont
@@ -24,12 +26,17 @@ pub fn create_db_from_csv(fname: &str) -> PinyinDB {
     let path = Path::new(fname);
     let mut file = BufferedReader::new(open_read_only(&path));
 
+    // Read the file line by line through the buffered reader
     for line_iter in file.lines() {
+
+        // Check if an error occured during the read file process
         let line = match line_iter {
             Ok(line) => line,
             Err(e) => fail!(e)
         };
 
+        // Split the line and set database entry properties
+        // Line structure : sinogram, pinyin, frequency
         let mut iter = line.as_slice().split(',');
         let sinogram =  iter.next().unwrap().to_string();
         let pinyin = iter.next().unwrap().to_string();
@@ -40,6 +47,9 @@ pub fn create_db_from_csv(fname: &str) -> PinyinDB {
             frequency
         );
 
+        // add the Chinese word with its frequency to the vector of 
+        // words matching the same pinyin or create a new vector 
+        // with this word if no entry yet for that pinyin
         match db.entry(pinyin) {
             hashmap::Occupied(o) => o.into_mut().push(entry),
             hashmap::Vacant(v) => { v.set(vec![entry]); }
@@ -49,7 +59,8 @@ pub fn create_db_from_csv(fname: &str) -> PinyinDB {
     return db;
 }
 
-pub fn create_db(fname: &str) -> PinyinDB {
+
+pub fn create_db_from_json(fname: &str) -> PinyinDB {
 
     let hasher = SipHasher::new();
     let mut db: PinyinDB = HashMap::with_hasher(hasher);
