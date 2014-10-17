@@ -45,7 +45,7 @@ pub fn string2tokens (string: &str) -> Vec<PinyinToken> {
                     if is_tone(&character) => {
                         tokens.push(PinyinToken {
                             initial: initial,
-                            final: String::new(),
+                            final_part: String::new(),
                             tone: character
                         });
                         continue;
@@ -65,7 +65,7 @@ pub fn string2tokens (string: &str) -> Vec<PinyinToken> {
             if is_tone(&character) && is_valid_final(accumulator.as_slice()) {
                 tokens.push(PinyinToken {
                     initial: initial,
-                    final: accumulator,
+                    final_part: accumulator,
                     tone: character
                 });
                 break;
@@ -92,7 +92,7 @@ pub fn string_to_tokens_as_strings(string: &str) -> Vec<String> {
 
         let pinyin = vec![
             token.initial.clone(),
-            token.final.clone(),
+            token.final_part.clone(),
             token.tone.to_string()
         ].concat();
 

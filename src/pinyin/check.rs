@@ -65,7 +65,7 @@ pub fn is_possible_no_initial(letter: &char) -> bool {
 ///
 ///
 ///
-pub fn is_valid_final (final: &str) -> bool {
+pub fn is_valid_final (final_part: &str) -> bool {
     [
         "",
         "a",
@@ -101,7 +101,7 @@ pub fn is_valid_final (final: &str) -> bool {
         "iong",
         "v",
         "ve",
-    ].contains(&final)
+    ].contains(&final_part)
 
 }
 

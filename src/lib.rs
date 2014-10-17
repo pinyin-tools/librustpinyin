@@ -26,7 +26,7 @@ pub extern fn pinyin2suggestion(
 
         let full_pinyin = vec![
             token.initial.clone(),
-            token.final.clone(),
+            token.final_part.clone(),
             token.tone.to_string()
         ].concat();
 
