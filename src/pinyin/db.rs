@@ -32,7 +32,7 @@ pub fn create_db_from_csv(fname: &str) -> PinyinDB {
         // Check if an error occured during the read file process
         let line = match line_iter {
             Ok(line) => line,
-            Err(e) => fail!(e)
+            Err(e) => panic!(e)
         };
 
         // Split the line and set database entry properties
@@ -73,10 +73,10 @@ pub fn create_db_from_json(fname: &str) -> PinyinDB {
             Ok(x) => {
                 match json::decode(x.clone().as_slice()) {
                     Ok(x) => x ,
-                    Err(e) => fail!(e)
+                    Err(e) => panic!(e)
                 }
             },
-            Err(e) => fail!(e)
+            Err(e) => panic!(e)
         };
 
         for (sinogram, pinyins) in word.iter() {

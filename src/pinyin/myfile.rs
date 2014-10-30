@@ -60,7 +60,7 @@ pub fn open_read_only(path: &Path) -> MyFile {
             }
         },
         Err(e) => {
-            fail!(e);
+            panic!(e);
         }
     }
 }
@@ -81,7 +81,7 @@ pub fn open_write_only(path: &Path) -> MyFile {
             }
         },
         Err(e) => {
-            fail!(e);
+            panic!(e);
         }
     }
 }
